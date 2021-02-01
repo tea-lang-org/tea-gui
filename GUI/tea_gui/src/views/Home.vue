@@ -1,35 +1,16 @@
 <template>
   <div>
     <div id="home">
-      <h1 class="mb-4" style="font-weight:bold; font-size:50px">Project</h1>
-      <!--img alt="GOTCHA_Logo" src="../assets/GOTCHA_Logo.png" style="width:35%; height:35%" /-->
-      <h1 class="mt-4 mb-4" style="font-weight:bold;">No time to read the latest bills? We gotcha!</h1>
-      <b-container>
-        <div class="mt-3">
-          <b-card-group deck class="mb-3">
-            <b-card 
-              header="Lookup Legislators" 
-              class="text-center"
-            >
-              <b-card-text>
-                What have our legislators been up to? How does their voting record look? How can we contact them?
-                Use this search to find out!
-              </b-card-text>
-              <b-button variant="info" to="/legislators">Search</b-button>
-            </b-card>
-            <b-card 
-              header="Lookup Legislation" 
-              class="text-center"
-            >
-              <b-card-text>
-                Want to find out what Congress has been up to? What bills are currently on the floor?
-                Click here to find out! 
-              </b-card-text>
-              <b-button variant="info" to="/legislation">Search</b-button>
-            </b-card>
-          </b-card-group>
-        </div>
-      </b-container>
+      <h1 class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Welcome to TEA!</h1>
+      <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%; height:35%" /-->
+      <h1 class="mt-4 mb-4" style="font-weight:bold;">To start, select a file to brew!</h1>
+      <b-form-file
+        v-model="tea_input"
+        :state="Boolean(tea_input)"
+        accept=".csv"
+        placeholder="Choose a .csv file or drop it here..."
+        drop-placeholder="Drop .csv file here..."
+      ></b-form-file>
     </div>
   </div>
 </template>
@@ -40,6 +21,7 @@ export default {
   name: "Home",
   data() {
     return {
+      tea_input: null
     }
   },
   methods: {
