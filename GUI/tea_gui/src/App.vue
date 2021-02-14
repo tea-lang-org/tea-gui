@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Welcome</router-link> |
-      <router-link to="/inputs">Inputs</router-link> |
+      <router-link to="/variables">Variables</router-link> |
+      <router-link to="/study_design">Study Design</router-link> |
     </div>
     <router-view />
   </div>

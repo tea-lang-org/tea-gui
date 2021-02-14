@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Inputs from "../views/Inputs.vue"
+import Variables from "../views/Variables.vue"
+import Study from "../views/Study.vue"
 
 Vue.use(VueRouter);
 
@@ -12,9 +13,14 @@ const routes = [
     component: Home
   },
   {
-    path: "/inputs",
-    name: "Inputs",
-    component: Inputs
+    path: "/variables",
+    name: "Variables",
+    component: Variables
+  },
+  {
+    path: "/study_design",
+    name: "Study",
+    component: Study
   }
 ];
 

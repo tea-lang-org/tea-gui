@@ -8,9 +8,9 @@ Vue.config.productionTip = false
 
 const store = Vue.observable({
   tea_file: {},
-  tea_data: "",
-  header_keys: "",
-  file_name: ""
+  tea_data: [],
+  tea_vars: {},
+  file_name: "None! Please input a file!"
 })
 
 const actions = {
@@ -23,8 +23,8 @@ const actions = {
   set_tea_data(teaData) {
     store.tea_data = teaData
   },
-  set_header_keys(headerKeys) {
-    store.header_keys = headerKeys
+  set_tea_variables(teaVariables) {
+    store.tea_variables = teaVariables
   }
 }
 

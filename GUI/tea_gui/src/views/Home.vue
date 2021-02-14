@@ -16,7 +16,7 @@
               @change="loadTextFromFile"
             ></b-form-file>
             <p class="mt-2">Selected file: <b>{{$store.file_name}}</b></p>
-            <b-button variant="info" class="mt-5" @click="loadVariables" to="/inputs">Submit</b-button> 
+            <b-button variant="info" class="mt-5" @click="loadVariables" to="/variables">Submit</b-button> 
           </b-form-group>
         </b-col>
       </b-row>
@@ -60,46 +60,48 @@ export default {
         }
       }
       this.$actions.set_tea_data(teaData)
-      this.$actions.set_header_keys(headerKeys)
       console.log(this.$store.tea_data)
     },
     loadVariables() {
       let variables = []
       console.log(Object.keys(this.$store.tea_data))
       Object.keys(this.$store.tea_data).forEach(header => {
-        let variable = {}
-        variable['name'] = header
+        if (header !== "") {
+          let variable = {}
+          variable['name'] = header
 
-        let dataCount = {}
-        let totalVals = 0
-        this.$store.tea_data[header].forEach(val => {
-          totalVals++
-          if (dataCount[val] == undefined) {
-            dataCount[val] = 1;
-          }
-          else {
-            dataCount[val]++
-          }
-        })
-        if (totalVals/2 > Object.keys(dataCount).length) {
-          variable['data type'] = 'nominal'
-          variable['catagories'] = Object.keys(dataCount)
-          // Ordinal????
-        }
-        else {
-          Object.keys(dataCount).forEach(val => {
-            if (val < 0) {
-              variable['data type'] = 'interval'  // This is not correct
-              return
+          let dataCount = {}
+          let totalVals = 0
+          this.$store.tea_data[header].forEach(val => {
+            totalVals++
+            if (dataCount[val] == undefined) {
+              dataCount[val] = 1;
+            }
+            else {
+              dataCount[val]++
             }
           })
-          if (variable['data type'] == undefined) {
-            variable['data type'] = 'ratio'
+          if (totalVals/2 > Object.keys(dataCount).length) {
+            variable['data type'] = 'nominal'
+            variable['catagories'] = Object.keys(dataCount)
+            // Ordinal????
           }
+          else {
+            Object.keys(dataCount).forEach(val => {
+              if (val < 0) {
+                variable['data type'] = 'interval'  // This is not correct
+                return
+              }
+            })
+            if (variable['data type'] == undefined) {
+              variable['data type'] = 'ratio'
+            }
+          }
+          variables.push(variable)
         }
-        variables.push(variable)
       })
       console.log(variables)
+      this.$actions.set_tea_variables(variables)
     }
   }
 }
