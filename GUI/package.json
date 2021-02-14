@@ -1,0 +1,22 @@
+{
+  "name": "GUI",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "fs": "0.0.1-security",
+    "json2csv": "^5.0.6",
+    "papaparse": "^5.3.0",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.27"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

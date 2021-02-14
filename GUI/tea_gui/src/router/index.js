@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Inputs from "../views/Inputs.vue"
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,11 @@ const routes = [
     name: "Home",
     component: Home
   },
+  {
+    path: "/inputs",
+    name: "Inputs",
+    component: Inputs
+  }
 ];
 
 const router = new VueRouter({

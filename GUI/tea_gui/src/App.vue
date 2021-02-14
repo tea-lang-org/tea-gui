@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Welcome</router-link> |
+      <router-link to="/inputs">Inputs</router-link> |
     </div>
     <router-view />
   </div>
