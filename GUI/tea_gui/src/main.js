@@ -9,6 +9,7 @@ Vue.config.productionTip = false
 const store = Vue.observable({
   tea_file: {},
   tea_data: "",
+  header_keys: "",
   file_name: ""
 })
 
@@ -21,6 +22,9 @@ const actions = {
   },
   set_tea_data(teaData) {
     store.tea_data = teaData
+  },
+  set_header_keys(headerKeys) {
+    store.header_keys = headerKeys
   }
 }
 

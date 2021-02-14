@@ -16,7 +16,7 @@
               @change="loadTextFromFile"
             ></b-form-file>
             <p class="mt-2">Selected file: <b>{{$store.file_name}}</b></p>
-            <b-button variant="info" class="mt-5" to="/inputs">Submit</b-button> 
+            <b-button variant="info" class="mt-5" @click="loadVariables" to="/inputs">Submit</b-button> 
           </b-form-group>
         </b-col>
       </b-row>
@@ -46,24 +46,60 @@ export default {
       let fileAsLines = file.split("\n")
       let headers = fileAsLines[0].split(",")
       let headerKeys = {}
-
       let teaData = {}
       var i = 0
       headers.forEach(header => {
-        teaData[header] = []
-        headerKeys[i] = header
+        teaData[header.replace(/['"]+/g, '')] = []
+        headerKeys[i] = header.replace(/['"]+/g, '')
         i++
       })
-      console.log(headerKeys)
-
       for (i = 1; i < fileAsLines.length; i++) {
         let currLine = fileAsLines[i].split(",")
         for(var j = 0; j < currLine.length; j++) {
-          teaData[headerKeys[j]].push(currLine[j])
+          teaData[headerKeys[j]].push(currLine[j].replace(/['"]+/g, ''))
         }
       }
+      this.$actions.set_tea_data(teaData)
+      this.$actions.set_header_keys(headerKeys)
+      console.log(this.$store.tea_data)
+    },
+    loadVariables() {
+      let variables = []
+      console.log(Object.keys(this.$store.tea_data))
+      Object.keys(this.$store.tea_data).forEach(header => {
+        let variable = {}
+        variable['name'] = header
 
-      console.log(teaData)
+        let dataCount = {}
+        let totalVals = 0
+        this.$store.tea_data[header].forEach(val => {
+          totalVals++
+          if (dataCount[val] == undefined) {
+            dataCount[val] = 1;
+          }
+          else {
+            dataCount[val]++
+          }
+        })
+        if (totalVals/2 > Object.keys(dataCount).length) {
+          variable['data type'] = 'nominal'
+          variable['catagories'] = Object.keys(dataCount)
+          // Ordinal????
+        }
+        else {
+          Object.keys(dataCount).forEach(val => {
+            if (val < 0) {
+              variable['data type'] = 'interval'  // This is not correct
+              return
+            }
+          })
+          if (variable['data type'] == undefined) {
+            variable['data type'] = 'ratio'
+          }
+        }
+        variables.push(variable)
+      })
+      console.log(variables)
     }
   }
 }
