@@ -1,5 +1,4 @@
 import Vue from 'vue'
-// import VuePapaParse from 'vue-papa-parse'
 import "./plugins/bootstrap-vue"
 import App from "./App.vue"
 import router from "./router"
@@ -10,6 +9,7 @@ const store = Vue.observable({
   tea_file: {},
   tea_data: [],
   tea_vars: {},
+  tea_study_design: {},
   file_name: "None! Please input a file!"
 })
 
@@ -24,7 +24,10 @@ const actions = {
     store.tea_data = teaData
   },
   set_tea_variables(teaVariables) {
-    store.tea_variables = teaVariables
+    store.tea_vars = teaVariables
+  },
+  set_tea_study(studyDesign) {
+    store.tea_study_design = studyDesign
   }
 }
 

@@ -60,11 +60,10 @@ export default {
         }
       }
       this.$actions.set_tea_data(teaData)
-      console.log(this.$store.tea_data)
+      console.log("tea_data: ", this.$store.tea_data)
     },
     loadVariables() {
       let variables = []
-      console.log(Object.keys(this.$store.tea_data))
       Object.keys(this.$store.tea_data).forEach(header => {
         if (header !== "") {
           let variable = {}
@@ -84,24 +83,15 @@ export default {
           if (totalVals/2 > Object.keys(dataCount).length) {
             variable['data type'] = 'nominal'
             variable['catagories'] = Object.keys(dataCount)
-            // Ordinal????
           }
           else {
-            Object.keys(dataCount).forEach(val => {
-              if (val < 0) {
-                variable['data type'] = 'interval'  // This is not correct
-                return
-              }
-            })
-            if (variable['data type'] == undefined) {
-              variable['data type'] = 'ratio'
-            }
+            variable['data type'] = 'interval'
           }
           variables.push(variable)
         }
       })
-      console.log(variables)
       this.$actions.set_tea_variables(variables)
+      console.log("tea_vars: ", this.$store.tea_vars)
     }
   }
 }
