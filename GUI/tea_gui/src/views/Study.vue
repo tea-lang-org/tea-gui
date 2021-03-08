@@ -28,7 +28,7 @@
               ></b-form-checkbox-group>
             </b-form-group>
           </b-row>
-          <div class="mt-3">Selected: <strong>{{left_vars}}</strong></div>
+          <!-- <div class="mt-3">Selected: <strong>{{left_vars}}</strong></div> -->
         </b-col>
         <b-col cols="4">
           <b-row class="mt-1" align-h="center"><strong>{{rightLabel}}</strong></b-row>
@@ -47,7 +47,7 @@
               ></b-form-checkbox-group>
             </b-form-group>
           </b-row>
-          <div class="mt-3">Selected: <strong>{{right_vars}}</strong></div>
+          <!-- <div class="mt-3">Selected: <strong>{{right_vars}}</strong></div> -->
         </b-col>
       </b-row>
       <div>
@@ -169,7 +169,7 @@ export default {
       if (this.right_vars.length > 1) {
         this.right_vars.shift()
       }
-      if (this.left_vars.indexOf(this.right_vars[0] !== -1)) {
+      if (this.left_vars.indexOf(this.right_vars[0]) !== -1) {
         this.left_vars.splice(this.left_vars.indexOf(this.right_vars[0]), 1)
       }
     },
