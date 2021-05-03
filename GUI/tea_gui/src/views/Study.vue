@@ -66,7 +66,6 @@
             <b-form-input v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" v-model="alpha" placeholder="Enter a value for alpha (0.05 default):"></b-form-input>
             <b-row v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" align-h="center">Alpha Value: {{alpha}}</b-row>
 
-            <!--TODO: Add data validation  should only accept selected + numeric vars-->
             <b-form-group
               class="mb-4 mt-1"
               v-slot="{ ariaDescribedby }"
@@ -83,7 +82,6 @@
               <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
             </b-form-group>
 
-            <!--TODO: Add data validation  should only accept selected + numeric vars-->
             <b-form-group
               class="mb-4 mt-1"
               v-slot="{ ariaDescribedby }"
@@ -195,22 +193,46 @@ export default {
         this.addedAssumptions["Type I (False Positive) Error Rate"] = this.alpha  
       }
       else if (this.assumption === "normal distribution" && this.norm_dist_vars.length > 0) {
+        let valid = true
         let nDistList = [] 
         for (let i = 0; i < this.norm_dist_vars.length; i++) {
           let currAdd = []
+          for (let j = 0; j < this.$store.tea_vars.length; j++) {
+            if (this.$store.tea_vars[j]['name'] === this.norm_dist_vars[i]) {
+              if (this.$store.tea_vars[j]['data type'] === 'nominal' || this.$store.tea_vars[j]['data type'] === 'ordinal') {
+                alert("Selected variables must be numeric types!")
+                valid = false
+              }
+              break
+            }
+          }
           currAdd.push(this.norm_dist_vars[i])
           nDistList.push(currAdd)
         }
-        this.addedAssumptions["normal distribution"] = nDistList
+        if (valid) {
+          this.addedAssumptions["normal distribution"] = nDistList
+        }
       }
       else if (this.assumption === "log normal distribution" && this.log_norm_dist_vars.length > 0) {
+        let valid = true
         let logNDistList = [] 
         for (let i = 0; i < this.log_norm_dist_vars.length; i++) {
           let currAdd = []
+          for (let j = 0; j < this.$store.tea_vars.length; j++) {
+            if (this.$store.tea_vars[j]['name'] === this.log_norm_dist_vars[i]) {
+              if (this.$store.tea_vars[j]['data type'] === 'nominal' || this.$store.tea_vars[j]['data type'] === 'ordinal') {
+                alert("Selected variables must be numeric types!")
+                valid = false
+              }
+              break
+            }
+          }
           currAdd.push(this.log_norm_dist_vars[i])
           logNDistList.push(currAdd)
         }
-        this.addedAssumptions["log normal distribution"] = logNDistList
+        if (valid) {
+          this.addedAssumptions["log normal distribution"] = logNDistList
+        }
       }
       // else if (this.assumption === "groups normally distributed") {
 
