@@ -13,9 +13,9 @@
           <b-form-select v-if="var_types" v-model="var_types[item.name]" @change="updateVar(item)">
             <b-form-select-option v-for="option in var_options" :key="option" :value="option">{{option}}</b-form-select-option>
           </b-form-select>
-          <b-form-select v-if="catagories[item.name] != undefined" v-model="cat_header">
-            <b-form-select-option :value="null" disabled>Catagories:</b-form-select-option>
-            <b-form-select-option v-for="val in catagories[item.name]" :key="val" :value="null" disabled>{{val}}</b-form-select-option>
+          <b-form-select v-if="categories[item.name] != undefined" v-model="cat_header">
+            <b-form-select-option :value="null" disabled>Categories:</b-form-select-option>
+            <b-form-select-option v-for="val in categories[item.name]" :key="val" :value="null" disabled>{{val}}</b-form-select-option>
           </b-form-select>
           <b-form-select disabled v-else v-model="cat_header">
             <b-form-select-option :value="null" disabled>None</b-form-select-option>
@@ -48,7 +48,7 @@ export default {
       val_header: null,
       var_options: ['nominal', 'ordinal', 'ratio', 'interval'],
       var_types: {},
-      catagories: {},
+      categories: {},
       expandName: {},
       expandAllName: "Expand All"
     }
@@ -64,14 +64,14 @@ export default {
             this.$store.tea_data[item.name].forEach(val => {
               newCat.add(val)
             })
-            newVars[i]['catagories'] = Array.from(newCat)
-            this.catagories[item.name] = Array.from(newCat)
-            console.log('nom/ord ', this.catagories)
+            newVars[i]['categories'] = Array.from(newCat)
+            this.categories[item.name] = Array.from(newCat)
+            // console.log('nom/ord ', this.categories)
           }
           else {
-            delete newVars[i]['catagories']
-            this.catagories[item.name] = undefined
-            console.log('rat/int ', this.catagories)
+            delete newVars[i]['categories']
+            this.categories[item.name] = undefined
+            // console.log('rat/int ', this.categories)
           }
           break;
         }
@@ -117,7 +117,7 @@ export default {
     this.tea_file = this.$store.file_name
     for (var i = 0; i < this.$store.tea_vars.length; i++) {
       this.var_types[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['data type']
-      this.catagories[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['catagories']
+      this.categories[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['categories']
     }
     Object.keys(this.$store.tea_data).forEach(header => {
       this.tea_data[header] = this.$store.tea_data[header].slice()

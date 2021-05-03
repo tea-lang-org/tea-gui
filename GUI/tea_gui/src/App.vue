@@ -4,6 +4,7 @@
       <router-link to="/">Welcome</router-link> |
       <router-link to="/variables">Variables</router-link> |
       <router-link to="/study_design">Study Design</router-link> |
+      <router-link to="/hypothesize">Hypothesize</router-link> |
     </div>
     <router-view />
   </div>

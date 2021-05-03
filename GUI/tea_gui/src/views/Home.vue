@@ -82,7 +82,7 @@ export default {
           })
           if (totalVals/2 > Object.keys(dataCount).length) {
             variable['data type'] = 'nominal'
-            variable['catagories'] = Object.keys(dataCount)
+            variable['categories'] = Object.keys(dataCount)
           }
           else {
             variable['data type'] = 'interval'

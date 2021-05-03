@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Variables from "../views/Variables.vue"
 import Study from "../views/Study.vue"
+import Hypothesize from "../views/Hypothesize.vue"
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/study_design",
     name: "Study",
     component: Study
+  },
+  {
+    path: "/hypothesize",
+    name: "Hypothesize",
+    component: Hypothesize
   }
 ];
 

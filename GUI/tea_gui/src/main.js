@@ -10,6 +10,7 @@ const store = Vue.observable({
   tea_data: [],
   tea_vars: {},
   tea_study_design: {},
+  tea_assumptions: {},
   file_name: "None! Please input a file!"
 })
 
@@ -28,6 +29,9 @@ const actions = {
   },
   set_tea_study(studyDesign) {
     store.tea_study_design = studyDesign
+  },
+  set_tea_assumptions(assumptions) {
+    store.tea_assumptions = assumptions
   }
 }
 
