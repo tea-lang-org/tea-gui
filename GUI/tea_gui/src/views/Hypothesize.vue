@@ -2,8 +2,8 @@
   <div>
     <div id="study">
       <h2 class="mb-4 mt-4" style="font-size:20px">Selected File: <b>{{tea_file}}</b></h2>
-      <h1 v-if="$store.tea_data.length != 0" class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Time to brew!</h1>
-      <b-button v-if="$store.tea_data.length != 0" variant="info" class="mb-5" size="lg" @click=hypothesize()>Brew</b-button>
+      <h1 class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Time to brew!</h1>
+      <b-button v-if="activate()" variant="info" class="mb-5" size="lg" @click=hypothesize()>Brew</b-button>
       <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%; height:35%" /-->
     </div>
   </div>
@@ -17,12 +17,15 @@ export default {
   name: "Hypothesize",
   data() {
     return {
-      tea_file: "",
+      tea_file: this.$store.file_name,
     }
   },
   created() {
   },
   methods: {
+    activate() {
+      return (this.$store.tea_vars != null) && (this.$store.tea_study_design != null)
+    },
     hypothesize() {
       // in readme: npm install axios@0.18.0 --save
       let path = 'http://localHost:5000/hypothesize'
@@ -43,9 +46,6 @@ export default {
       })
     }
   },
-  mounted() {
-    this.tea_file = this.$store.file_name
-  }
 }
 </script>
 

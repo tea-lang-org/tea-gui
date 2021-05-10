@@ -6,11 +6,11 @@ import router from "./router"
 Vue.config.productionTip = false
 
 const store = Vue.observable({
-  tea_file: {},
-  tea_data: [],
-  tea_vars: {},
-  tea_study_design: {},
-  tea_assumptions: {},
+  tea_file: null,
+  tea_data: null,
+  tea_vars: null,
+  tea_study_design: null,
+  tea_assumptions: null,
   file_name: "None! Please input a file!"
 })
 

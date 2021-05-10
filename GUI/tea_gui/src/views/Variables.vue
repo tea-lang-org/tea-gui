@@ -1,37 +1,38 @@
 <template>
   <div>
-    <div id="inputs">
+    <div >
       <h2 class="mb-4 mt-4" style="font-size:20px">Selected File: <b>{{tea_file}}</b></h2>
-      <h1 v-if="$store.tea_data.length != 0" class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
-      <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%; height:35%" /-->
-      <h1 v-if="$store.tea_data.length != 0" class="mt-4 mb-4" style="font-size:30px">Your variables:</h1>
-      <b-row align-h="center">
-        <b-col cols="2" class="mt-3" v-for="item in $store.tea_vars" :key="item.name"><strong>{{item.name}}</strong></b-col>
-      </b-row>
-      <b-row align-h="center">
-        <b-col cols="2" v-for="item in $store.tea_vars" :key="item.name">
-          <b-form-select v-if="var_types" v-model="var_types[item.name]" @change="updateVar(item)">
-            <b-form-select-option v-for="option in var_options" :key="option" :value="option">{{option}}</b-form-select-option>
-          </b-form-select>
-          <b-form-select v-if="categories[item.name] != undefined" v-model="cat_header">
-            <b-form-select-option :value="null" disabled>Categories:</b-form-select-option>
-            <b-form-select-option v-for="val in categories[item.name]" :key="val" :value="null" disabled>{{val}}</b-form-select-option>
-          </b-form-select>
-          <b-form-select disabled v-else v-model="cat_header">
-            <b-form-select-option :value="null" disabled>None</b-form-select-option>
-          </b-form-select>
-          <b-row class="mt-1" align-h="center" v-for="(val,index) in tea_data[item.name]" :key="(val,index)">
-            {{val}}
-          </b-row>
-          <!-- <b-button variant="primary" size="sm" class="mt-2" @click="modifyCol(item.name)" to="/variables">{{expandName[item.name]}}</b-button>  -->
-        </b-col>
-      </b-row>
-      <b-row align-h="end">
-        <b-col cols="2">
-          <b-button v-if="$store.tea_data.length != 0" variant="primary" size="sm" class="mt-3" @click="expandAll()">{{expandAllName}}</b-button>
-        </b-col>
-      </b-row>
-      <b-button v-if="$store.tea_data.length != 0" variant="info" class="mt-5 mb-5" to="/study_design">Submit</b-button>
+      <div v-if="activate()" class="inputs">
+        <h1 class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
+        <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%; height:35%" /-->
+        <h1 class="mt-4 mb-4" style="font-size:30px">Your variables:</h1>
+        <b-row align-h="center">
+          <b-col cols="2" class="mt-3" v-for="item in $store.tea_vars" :key="item.name"><strong>{{item.name}}</strong></b-col>
+        </b-row>
+        <b-row align-h="center">
+          <b-col cols="2" v-for="item in $store.tea_vars" :key="item.name">
+            <b-form-select v-if="var_types" v-model="var_types[item.name]" @change="updateVar(item)">
+              <b-form-select-option v-for="option in var_options" :key="option" :value="option">{{option}}</b-form-select-option>
+            </b-form-select>
+            <b-form-select v-if="categories[item.name] != undefined" v-model="cat_header">
+              <b-form-select-option :value="null" disabled>Categories:</b-form-select-option>
+              <b-form-select-option v-for="val in categories[item.name]" :key="val" :value="null" disabled>{{val}}</b-form-select-option>
+            </b-form-select>
+            <b-form-select disabled v-else v-model="cat_header">
+              <b-form-select-option :value="null" disabled>None</b-form-select-option>
+            </b-form-select>
+            <b-row class="mt-1" align-h="center" v-for="(val,index) in tea_data[item.name]" :key="(val,index)">
+              {{val}}
+            </b-row>
+          </b-col>
+        </b-row>
+        <b-row align-h="end">
+          <b-col cols="2">
+            <b-button variant="primary" size="sm" class="mt-3" @click="expandAll()">{{expandAllName}}</b-button>
+          </b-col>
+        </b-row>
+        <b-button variant="info" class="mt-5 mb-5" to="/study_design">Submit</b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +43,7 @@ export default {
   name: "Variables",
   data() {
     return {
-      tea_file: "",
+      tea_file: this.$store.file_name,
       tea_data: {},
       cat_header: null,
       val_header: null,
@@ -54,6 +55,9 @@ export default {
     }
   },
   methods: {
+    activate() {
+      return (this.$store.tea_vars != null)
+    },
     updateVar(item) {
       let newVars = this.$store.tea_vars;
       for (var i = 0; i < newVars.length; i++) {
@@ -114,19 +118,20 @@ export default {
   computed: {
   },
   mounted() {
-    this.tea_file = this.$store.file_name
-    for (var i = 0; i < this.$store.tea_vars.length; i++) {
-      this.var_types[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['data type']
-      this.categories[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['categories']
-    }
-    Object.keys(this.$store.tea_data).forEach(header => {
-      this.tea_data[header] = this.$store.tea_data[header].slice()
-      if (this.tea_data[header].length > 5) {
-        this.tea_data[header].length = 5;
+    if (this.activate()) {
+      for (var i = 0; i < this.$store.tea_vars.length; i++) {
+        this.var_types[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['data type']
+        this.categories[this.$store.tea_vars[i]['name']] = this.$store.tea_vars[i]['categories']
       }
-      this.expandName[header] = "Expand"
-    })
-    this.$forceUpdate()
+      Object.keys(this.$store.tea_data).forEach(header => {
+        this.tea_data[header] = this.$store.tea_data[header].slice()
+        if (this.tea_data[header].length > 5) {
+          this.tea_data[header].length = 5;
+        }
+        this.expandName[header] = "Expand"
+      })
+      this.$forceUpdate()
+    }
   }
 }
 </script>
@@ -138,5 +143,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.inputs {
+  overflow: scroll; 
 }
 </style>

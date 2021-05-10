@@ -2,107 +2,107 @@
   <div>
     <div id="study">
       <h2 class="mb-4 mt-4" style="font-size:20px">Selected File: <b>{{tea_file}}</b></h2>
-      <h1 v-if="$store.tea_data.length != 0" class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
-      <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%  height:35%" /-->
-      <b-row align-h="center">
-        <b-col cols="4">
-          <b-form-select v-if="$store.tea_data.length != 0" class="mb-4 mt-4" v-model="study_type" :options="sd_options" @change="updateVars"></b-form-select>
-          <!-- <div class="mt-3">Selected: <strong>{{study_design}}</strong></div> -->
-        </b-col>
-      </b-row>    
-      <b-row align-h="center" v-if="study_type">
-        <b-col cols="4">
-          <b-row class="mt-1" align-h="center"><strong>{{leftLabel}}</strong></b-row>
-          <b-row align-h="center">
-            <b-form-group
-              class="mb-4 mt-1"
-              v-slot="{ ariaDescribedby }"
-            >
-              <b-form-checkbox-group
-                v-model="left_vars"
-                :options="vars"
-                :aria-describedby="ariaDescribedby"
-                stacked
-                style="text-align:left "
-                @change="updateLeftVars"
-              ></b-form-checkbox-group>
-            </b-form-group>
-          </b-row>
-          <!-- <div class="mt-3">Selected: <strong>{{left_vars}}</strong></div> -->
-        </b-col>
-        <b-col cols="4">
-          <b-row class="mt-1" align-h="center"><strong>{{rightLabel}}</strong></b-row>
-          <b-row align-h="center">
-            <b-form-group
-              class="mb-4 mt-1"
-              v-slot="{ ariaDescribedby }"
-            >
-              <b-form-checkbox-group
-                v-model="right_vars"
-                :options="vars"
-                :aria-describedby="ariaDescribedby"
-                stacked
-                style="text-align:left "
-                @change="updateRightVars"
-              ></b-form-checkbox-group>
-            </b-form-group>
-          </b-row>
-          <!-- <div class="mt-3">Selected: <strong>{{right_vars}}</strong></div> -->
-        </b-col>
-      </b-row>
-      <div>
+      <div v-if="activate()">
+        <h1 class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
+        <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%  height:35%" /-->
+        <b-row align-h="center">
+          <b-col cols="4">
+            <b-form-select class="mb-4 mt-4" v-model="study_type" :options="sd_options" @change="updateVars"></b-form-select>
+            <!-- <div class="mt-3">Selected: <strong>{{study_design}}</strong></div> -->
+          </b-col>
+        </b-row>    
         <b-row align-h="center" v-if="study_type">
           <b-col cols="4">
-            <b-row class="mt-2, mb-2" align-h="center"><strong>Current Assumptions:</strong></b-row>
-            <b-row v-for="assumption in Object.keys(addedAssumptions)" :key="assumption" align-h="center">
-              {{assumption + ": " + addedAssumptions[assumption]}}
-              <b-button variant="danger" class="ml-1" size="sm" @click=deleteAssumption(assumption)>x</b-button>
+            <b-row class="mt-1" align-h="center"><strong>{{leftLabel}}</strong></b-row>
+            <b-row align-h="center">
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-model="left_vars"
+                  :options="vars"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+              </b-form-group>
             </b-row>
+            <!-- <div class="mt-3">Selected: <strong>{{left_vars}}</strong></div> -->
           </b-col>
           <b-col cols="4">
-            <b-row class="mt-2, mb-2" align-h="center"><strong>Add Assumption:</strong></b-row>
-            <b-form-select class="mt-2, mb-2" v-model="assumption" :options="assumptionsOptions"></b-form-select>
-
-            <b-form-input v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" v-model="alpha" placeholder="Enter a value for alpha (0.05 default):"></b-form-input>
-            <b-row v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" align-h="center">Alpha Value: {{alpha}}</b-row>
-
-            <b-form-group
-              class="mb-4 mt-1"
-              v-slot="{ ariaDescribedby }"
-            >
-              <b-form-checkbox-group
-                v-if="assumption==='normal distribution'"
-                class="mt-2, mb-2"
-                v-model="norm_dist_vars"
-                :options="vars"
-                :aria-describedby="ariaDescribedby"
-                stacked
-                style="text-align:left "
-              ></b-form-checkbox-group>
-              <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
-            </b-form-group>
-
-            <b-form-group
-              class="mb-4 mt-1"
-              v-slot="{ ariaDescribedby }"
-            >
-              <b-form-checkbox-group
-                v-if="assumption==='log normal distribution'"
-                class="mt-2, mb-2"
-                v-model="log_norm_dist_vars"
-                :options="vars"
-                :aria-describedby="ariaDescribedby"
-                stacked
-                style="text-align:left "
-              ></b-form-checkbox-group>
-              <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
-            </b-form-group>
-            <b-button v-if="assumption" variant="info" class="mb-5" @click=submitAssumption()>Submit</b-button>
+            <b-row class="mt-1" align-h="center"><strong>{{rightLabel}}</strong></b-row>
+            <b-row align-h="center">
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-model="right_vars"
+                  :options="vars"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </b-row>
+            <!-- <div class="mt-3">Selected: <strong>{{right_vars}}</strong></div> -->
           </b-col>
         </b-row>
-      </div>
+        <div>
+          <b-row align-h="center" v-if="study_type">
+            <b-col cols="4">
+              <b-row class="mt-2, mb-2" align-h="center"><strong>Current Assumptions:</strong></b-row>
+              <b-row v-for="assumption in Object.keys(addedAssumptions)" :key="assumption" align-h="center">
+                {{assumption + ": " + addedAssumptions[assumption]}}
+                <b-button variant="danger" class="ml-1" size="sm" @click=deleteAssumption(assumption)>x</b-button>
+              </b-row>
+            </b-col>
+            <b-col cols="4">
+              <b-row class="mt-2, mb-2" align-h="center"><strong>Add Assumption:</strong></b-row>
+              <b-form-select class="mt-2, mb-2" v-model="assumption" :options="assumptionsOptions"></b-form-select>
 
-      <b-button v-if="$store.tea_data.length != 0" variant="info" class="mt-5 mb-5" to="/hypothesize" @click=submit()>Submit</b-button>
+              <b-form-input v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" v-model="alpha" placeholder="Enter a value for alpha (0.05 default):"></b-form-input>
+              <b-row v-if="assumption==='Type I (False Positive) Error Rate'" class="mt-2, mb-2" align-h="center">Alpha Value: {{alpha}}</b-row>
+
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-if="assumption==='normal distribution'"
+                  class="mt-2, mb-2"
+                  v-model="norm_dist_vars"
+                  :options="numVars()"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+                <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
+              </b-form-group>
+
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-if="assumption==='log normal distribution'"
+                  class="mt-2, mb-2"
+                  v-model="log_norm_dist_vars"
+                  :options="numVars()"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+                <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
+              </b-form-group>
+              <b-button v-if="assumption" variant="info" class="mb-5" @click=submitAssumption()>Submit</b-button>
+            </b-col>
+          </b-row>
+        </div>
+
+        <b-button variant="info" class="mt-5 mb-5" to="/hypothesize" @click=submit()>Submit</b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +113,7 @@ export default {
   name: "Study",
   data() {
     return {
-      tea_file: "",
+      tea_file: this.$store.file_name,
       study_design: {},
       study_type: null,
       sd_options: [
@@ -144,8 +144,10 @@ export default {
     }
   },
   created() {
-    if (this.vars.indexOf("") != null) {
-      this.vars.splice(this.vars.indexOf(""), 1)
+    if (this.activate()) {
+      if (this.vars.indexOf("") != null) {
+        this.vars.splice(this.vars.indexOf(""), 1)
+      }
     }
   },
   methods: {
@@ -154,6 +156,18 @@ export default {
         Contributor variables: checkbox select, can choose from the variables
         Outcome variables: checkbox select, can choose from the variables
       */
+    activate() {
+      return (this.$store.tea_vars != null)
+    },
+    numVars() {
+      let vars = []
+      for (let i = 0; i < this.$store.tea_vars.length; i++) {
+        if (this.$store.tea_vars[i]['data type'] == 'ratio' || this.$store.tea_vars[i]['data type'] == 'interval') {
+          vars.push(this.$store.tea_vars[i]['name'])
+        }
+      }
+      return vars
+    },
     updateVars() {
       if (this.study_type === 'observational study') {
         this.leftLabel = "Contributor Variables:"
@@ -167,27 +181,23 @@ export default {
       this.right_vars = [] 
       this.$forceUpdate()
     },
-    updateRightVars() {
-      if (this.right_vars.length > 1 && this.study_type !== 'observational study') {
-        this.right_vars.shift()
-      }
-
-      // TODO: Fix this  broken.
-      if (this.left_vars.indexOf(this.right_vars[0]) !== -1 && this.study_type !== 'observational study') {
-        console.log(this.left_vars)
-        console.log(this.right_vars)
-        this.left_vars.splice(this.left_vars.indexOf(this.right_vars[0]), 1)
-      }
-      this.$forceUpdate() 
-    },
-    updateLeftVars() {
-      if (this.left_vars.indexOf(this.right_vars[0] !== -1) && this.study_type !== 'observational study') {
-        console.log(this.left_vars) 
-        console.log(this.right_vars) 
-        this.right_vars = [] 
-      }
-      this.$forceUpdate()
-    },
+    // updateRightVars() {
+    //   // TODO: Fix this  broken.
+    //   if (this.left_vars.indexOf(this.right_vars[0]) !== -1 && this.study_type !== 'observational study') {
+    //     console.log(this.left_vars)
+    //     console.log(this.right_vars)
+    //     this.left_vars.splice(this.left_vars.indexOf(this.right_vars[0]), 1)
+    //   }
+    //   this.$forceUpdate() 
+    // },
+    // updateLeftVars() {
+    //   if (this.left_vars.indexOf(this.right_vars[0] !== -1) && this.study_type !== 'observational study') {
+    //     console.log(this.left_vars) 
+    //     console.log(this.right_vars) 
+    //     this.right_vars = [] 
+    //   }
+    //   this.$forceUpdate()
+    // },
     submitAssumption() {
       if (this.assumption === "Type I (False Positive) Error Rate") {
         this.addedAssumptions["Type I (False Positive) Error Rate"] = this.alpha  
@@ -282,9 +292,6 @@ export default {
       console.log("Assumptions: ", this.$store.tea_assumptions)
     }
   },
-  mounted() {
-    this.tea_file = this.$store.file_name
-  }
 }
 </script>
 
