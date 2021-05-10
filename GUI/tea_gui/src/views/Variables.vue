@@ -2,9 +2,9 @@
   <div>
     <div id="inputs">
       <h2 class="mb-4 mt-4" style="font-size:20px">Selected File: <b>{{tea_file}}</b></h2>
-      <h1 class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
+      <h1 v-if="$store.tea_data.length != 0" class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
       <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%; height:35%" /-->
-      <h1 class="mt-4 mb-4" style="font-size:30px">Your variables:</h1>
+      <h1 v-if="$store.tea_data.length != 0" class="mt-4 mb-4" style="font-size:30px">Your variables:</h1>
       <b-row align-h="center">
         <b-col cols="2" class="mt-3" v-for="item in $store.tea_vars" :key="item.name"><strong>{{item.name}}</strong></b-col>
       </b-row>
@@ -28,10 +28,10 @@
       </b-row>
       <b-row align-h="end">
         <b-col cols="2">
-          <b-button variant="primary" size="sm" class="mt-3" @click="expandAll()">{{expandAllName}}</b-button>
+          <b-button v-if="$store.tea_data.length != 0" variant="primary" size="sm" class="mt-3" @click="expandAll()">{{expandAllName}}</b-button>
         </b-col>
       </b-row>
-      <b-button variant="info" class="mt-5 mb-5" to="/study_design">Submit</b-button>
+      <b-button v-if="$store.tea_data.length != 0" variant="info" class="mt-5 mb-5" to="/study_design">Submit</b-button>
     </div>
   </div>
 </template>

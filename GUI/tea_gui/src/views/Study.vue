@@ -2,11 +2,11 @@
   <div>
     <div id="study">
       <h2 class="mb-4 mt-4" style="font-size:20px">Selected File: <b>{{tea_file}}</b></h2>
-      <h1 class="mb-4 mt-4" style="font-weight:bold  font-size:50px">Now for some add-ins...</h1>
+      <h1 v-if="$store.tea_data.length != 0" class="mb-4 mt-4" style="font-weight:bold; font-size:50px">Now for some add-ins...</h1>
       <!--img alt="TEA_Logo" src="../assets/TEA_Logo.png" style="width:35%  height:35%" /-->
       <b-row align-h="center">
         <b-col cols="4">
-          <b-form-select class="mb-4 mt-4" v-model="study_type" :options="sd_options" @change="updateVars"></b-form-select>
+          <b-form-select v-if="$store.tea_data.length != 0" class="mb-4 mt-4" v-model="study_type" :options="sd_options" @change="updateVars"></b-form-select>
           <!-- <div class="mt-3">Selected: <strong>{{study_design}}</strong></div> -->
         </b-col>
       </b-row>    
@@ -102,7 +102,7 @@
         </b-row>
       </div>
 
-      <b-button variant="info" class="mt-5 mb-5" to="/hypothesize" @click=submit()>Submit</b-button>
+      <b-button v-if="$store.tea_data.length != 0" variant="info" class="mt-5 mb-5" to="/hypothesize" @click=submit()>Submit</b-button>
     </div>
   </div>
 </template>

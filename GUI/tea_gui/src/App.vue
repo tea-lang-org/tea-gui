@@ -2,11 +2,11 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Welcome</router-link> |
-      <router-link to="/variables">Variables</router-link> |
-      <router-link to="/study_design">Study Design</router-link> |
-      <router-link to="/hypothesize">Hypothesize</router-link> |
+      <router-link v-if="$store.tea_file != {}" to="/variables">Variables</router-link> |
+      <router-link v-if="$store.tea_file != {}" to="/study_design">Study Design</router-link> |
+      <router-link v-if="$store.tea_file != {}" to="/hypothesize">Hypothesize</router-link> |
     </div>
-    <router-view />
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
