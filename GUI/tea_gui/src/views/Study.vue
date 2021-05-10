@@ -54,7 +54,7 @@
             <b-col cols="4">
               <b-row class="mt-2, mb-2" align-h="center"><strong>Current Assumptions:</strong></b-row>
               <b-row v-for="assumption in Object.keys(addedAssumptions)" :key="assumption" align-h="center">
-                {{assumption + ": " + addedAssumptions[assumption]}}
+                {{assumption + ": " + printAssumption(addedAssumptions[assumption])}}
                 <b-button variant="danger" class="ml-1" size="sm" @click=deleteAssumption(assumption)>x</b-button>
               </b-row>
             </b-col>
@@ -78,7 +78,6 @@
                   stacked
                   style="text-align:left "
                 ></b-form-checkbox-group>
-                <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
               </b-form-group>
 
               <b-form-group
@@ -94,8 +93,38 @@
                   stacked
                   style="text-align:left "
                 ></b-form-checkbox-group>
-                <!-- <b-row v-if="assumption==='normal distribution'" class="mt-2, mb-2" align-h="center">Numeric Variables: {{norm_dist_vars.toString()}}</b-row> -->
               </b-form-group>
+
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-if="assumption==='groups normally distributed'"
+                  class="mt-2, mb-2"
+                  v-model="g_norm_dist_vars"
+                  :options="numVars()"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+              </b-form-group>
+
+              <b-form-group
+                class="mb-4 mt-1"
+                v-slot="{ ariaDescribedby }"
+              >
+                <b-form-checkbox-group
+                  v-if="assumption==='equal variance'"
+                  class="mt-2, mb-2"
+                  v-model="equal_var_vars"
+                  :options="numVars()"
+                  :aria-describedby="ariaDescribedby"
+                  stacked
+                  style="text-align:left "
+                ></b-form-checkbox-group>
+              </b-form-group>
+              
               <b-button v-if="assumption" variant="info" class="mb-5" @click=submitAssumption()>Submit</b-button>
             </b-col>
           </b-row>
@@ -139,6 +168,10 @@ export default {
       alpha: 0.05,
       norm_dist_vars: [],
       log_norm_dist_vars: [],
+      g_norm_dist_vars: [],
+      g_norm_dist_list: [],
+      equal_var_vars: [],
+      equal_var_list: [],
 
       addedAssumptions : {}
     }
@@ -244,17 +277,63 @@ export default {
           this.addedAssumptions["log normal distribution"] = logNDistList
         }
       }
-      // else if (this.assumption === "groups normally distributed") {
-
-      // }
-      // else if (this.assumption === "equal variance") {
-
-      // }
-      // console.log(this.addedAssumptions)
+      else if (this.assumption === "groups normally distributed" && this.g_norm_dist_vars.length > 0) {
+        let valid = true
+        let currAdd = []
+        for (let i = 0; i < this.g_norm_dist_vars.length; i++) {
+          for (let j = 0; j < this.$store.tea_vars.length; j++) {
+            if (this.$store.tea_vars[j]['name'] === this.g_norm_dist_vars[i]) {
+              if (this.$store.tea_vars[j]['data type'] === 'nominal' || this.$store.tea_vars[j]['data type'] === 'ordinal') {
+                alert("Selected variables must be numeric types!")
+                valid = false
+              }
+              break
+            }
+          }
+          currAdd.push(this.g_norm_dist_vars[i])
+        }
+        this.g_norm_dist_list.push(currAdd)
+        if (valid) {
+          this.addedAssumptions["groups normally distributed"] = this.g_norm_dist_list
+        }
+      }
+      else if (this.assumption === "equal variance" && this.equal_var_vars.length > 0) {
+        let valid = true
+        let currAdd = []
+        for (let i = 0; i < this.equal_var_vars.length; i++) {
+          for (let j = 0; j < this.$store.tea_vars.length; j++) {
+            if (this.$store.tea_vars[j]['name'] === this.equal_var_vars[i]) {
+              if (this.$store.tea_vars[j]['data type'] === 'nominal' || this.$store.tea_vars[j]['data type'] === 'ordinal') {
+                alert("Selected variables must be numeric types!")
+                valid = false
+              }
+              break
+            }
+          }
+          currAdd.push(this.equal_var_vars[i])
+        }
+        this.equal_var_list.push(currAdd)
+        if (valid) {
+          this.addedAssumptions["equal variance"] = this.equal_var_list
+        }
+      }
       this.$forceUpdate()  
+    },
+    printAssumption(assumption) {
+      let print = ""
+      for (let i = 0; i < assumption.length; i++) {
+        print += "[" + assumption[i] + "], "
+      }
+      return print.substring(0, print.length-2)
     },
     deleteAssumption(assumption) {
       delete this.addedAssumptions[assumption]
+      if (assumption === "groups normally distributed") {
+        this.g_norm_dist_list = []
+      }
+      if (assumption === "equal variance") {
+        this.equal_var_list = []
+      }
       // console.log(this.addedAssumptions)
       this.$forceUpdate()  
     },
