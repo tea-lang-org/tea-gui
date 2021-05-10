@@ -22,10 +22,12 @@ def hypothesize():
     tea_vars = request_data['tea_vars']
     tea_study_design = request_data['tea_study_design']
     tea_assumptions = request_data['tea_assumptions']
+    tea_hypothesis = request_data['tea_hypothesis']
 
     print(tea_vars)
     print(tea_study_design)
     print(tea_assumptions)
+    print(tea_hypothesis)
 
     gen_indices = False
     indices = []
@@ -52,6 +54,7 @@ def hypothesize():
     tea.define_study_design(tea_study_design) # Does order of vars in contributor, outcome, etc. matter?
     tea.assume(tea_assumptions)
     results = tea.hypothesize(['Ineq', 'Prob'], ['Ineq ~ -Prob'])
+    # results = tea.hypothesize(['drug', 'wedsBDI'], ['drug:Ecstasy > Alcohol'])
     return results._pretty_print()
 
 if __name__ == '__main__':

@@ -54,7 +54,7 @@
             <b-col cols="4">
               <b-row class="mt-2, mb-2" align-h="center"><strong>Current Assumptions:</strong></b-row>
               <b-row v-for="assumption in Object.keys(addedAssumptions)" :key="assumption" align-h="center">
-                {{assumption + ": " + printAssumption(addedAssumptions[assumption])}}
+                {{assumption + ": " + printAssumption(assumption, addedAssumptions[assumption])}}
                 <b-button variant="danger" class="ml-1" size="sm" @click=deleteAssumption(assumption)>x</b-button>
               </b-row>
             </b-col>
@@ -319,10 +319,13 @@ export default {
       }
       this.$forceUpdate()  
     },
-    printAssumption(assumption) {
+    printAssumption(assumption, assumptions) {
+      if (assumption === "Type I (False Positive) Error Rate") {
+        return assumptions
+      }
       let print = ""
-      for (let i = 0; i < assumption.length; i++) {
-        print += "[" + assumption[i] + "], "
+      for (let i = 0; i < assumptions.length; i++) {
+        print += "[" + assumptions[i] + "], "
       }
       return print.substring(0, print.length-2)
     },
@@ -338,37 +341,42 @@ export default {
       this.$forceUpdate()  
     },
     submit() {
-      this.study_design = {}
-      //console.log(this.vars)
-      if (this.study_type === 'observational study') {
-        this.study_design['study type'] = 'observational study'
-        if (this.left_vars.length > 0) {
-          if (this.left_vars.length > 1) {
-            this.study_design['contributor variables'] = this.left_vars
-          }
-          else {
-            this.study_design['contributor variables'] = this.left_vars[0]
-          }
-        }
-        this.study_design['outcome variables'] = this.right_vars
+      if (this.left_vars.length < 1 || this.right_vars.length < 1) {
+        alert("At least one of each type of variable must be selected.")
       }
       else {
-        this.study_design['study type'] = 'experiment'
-        if (this.left_vars.length > 0) {
-          if (this.left_vars.length > 1) {
-            this.study_design['independent variables'] = this.left_vars
+        this.study_design = {}
+        //console.log(this.vars)
+        if (this.study_type === 'observational study') {
+          this.study_design['study type'] = 'observational study'
+          if (this.left_vars.length > 0) {
+            if (this.left_vars.length > 1) {
+              this.study_design['contributor variables'] = this.left_vars
+            }
+            else {
+              this.study_design['contributor variables'] = this.left_vars[0]
+            }
           }
-          else {
-            this.study_design['independent variables'] = this.left_vars[0]
-          }
+          this.study_design['outcome variables'] = this.right_vars
         }
-        this.study_design['dependent variables'] = this.right_vars
-      }
-      this.$actions.set_tea_study(this.study_design)
-      this.$actions.set_tea_assumptions(this.addedAssumptions)
+        else {
+          this.study_design['study type'] = 'experiment'
+          if (this.left_vars.length > 0) {
+            if (this.left_vars.length > 1) {
+              this.study_design['independent variables'] = this.left_vars
+            }
+            else {
+              this.study_design['independent variables'] = this.left_vars[0]
+            }
+          }
+          this.study_design['dependent variables'] = this.right_vars
+        }
+        this.$actions.set_tea_study(this.study_design)
+        this.$actions.set_tea_assumptions(this.addedAssumptions)
 
-      console.log("Study Design: ", this.$store.tea_study_design)
-      console.log("Assumptions: ", this.$store.tea_assumptions)
+        console.log("Study Design: ", this.$store.tea_study_design)
+        console.log("Assumptions: ", this.$store.tea_assumptions)
+      }
     }
   },
 }
